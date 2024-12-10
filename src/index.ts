@@ -7,7 +7,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import * as jsforce from 'jsforce';
 import dotenv from "dotenv";
-import { isValidQueryArgs } from "./types.js";
+import { tools } from "./tools.js";
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ class SalesforceServer {
   constructor() {
     this.server = new Server({
       name: "salesforce-mcp-server",
-      version: "0.1.0"
+      version: "0.2.0"
     }, {
       capabilities: {
         tools: {}
@@ -34,7 +34,8 @@ class SalesforceServer {
     });
 
     this.conn = new jsforce.Connection({
-      loginUrl: API_CONFIG.LOGIN_URL
+      loginUrl: API_CONFIG.LOGIN_URL,
+      version:'58.0'
     });
 
     this.setupHandlers();
@@ -56,41 +57,24 @@ class SalesforceServer {
     this.server.setRequestHandler(
       ListToolsRequestSchema,
       async () => ({
-        tools: [{
-          name: "query",
-          description: "Execute a SOQL query on Salesforce",
-          inputSchema: {
-            type: "object",
-            properties: {
-              query: {
-                type: "string",
-                description: "SOQL query to execute"
-              }
-            },
-            required: ["query"]
-          }
-        }]
+        tools: tools.map(({ name, description, inputSchema }) => ({
+          name,
+          description,
+          inputSchema
+        }))
       })
     );
 
     this.server.setRequestHandler(
       CallToolRequestSchema,
       async (request) => {
-        if (request.params.name !== "query") {
+        const tool = tools.find(t => t.name === request.params.name);
+        
+        if (!tool) {
           return {
             content: [{
               type: "text",
               text: `Unknown tool: ${request.params.name}`
-            }],
-            isError: true
-          };
-        }
-
-        if (!isValidQueryArgs(request.params.arguments)) {
-          return {
-            content: [{
-              type: "text",
-              text: "Invalid query arguments"
             }],
             isError: true
           };
@@ -102,7 +86,7 @@ class SalesforceServer {
             process.env.SF_PASSWORD! + process.env.SF_SECURITY_TOKEN!
           );
 
-          const result = await this.conn.query(request.params.arguments.query);
+          const result = await tool.handler(this.conn, request.params.arguments);
           
           return {
             content: [{

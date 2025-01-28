@@ -1,6 +1,16 @@
 # Salesforce MCP Server
 
+[![smithery badge](https://smithery.ai/badge/salesforce-mcp-server)](https://smithery.ai/server/salesforce-mcp-server)
+
 A Model Context Protocol server implementation for interacting with Salesforce through its REST API using jsforce.
+
+### Installing via Smithery
+
+To install Salesforce Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/salesforce-mcp-server):
+
+```bash
+npx -y @smithery/cli install salesforce-mcp-server --client claude
+```
 
 ## Features
 
@@ -102,6 +112,14 @@ Contributions are welcome! Please submit PRs with improvements.
 # Salesforce MCP Server
 
 A Model Context Protocol server implementation for interacting with Salesforce through its REST API using jsforce.
+
+### Installing via Smithery
+
+To install Salesforce Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/salesforce-mcp-server):
+
+```bash
+npx -y @smithery/cli install salesforce-mcp-server --client claude
+```
 
 ## Features
 
@@ -226,3 +244,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```

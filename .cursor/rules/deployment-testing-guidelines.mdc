@@ -1,0 +1,11 @@
+---
+description: Deployment and Testing Guidelines
+globs: *.ts,*.js
+alwaysApply: false
+---
+# Deployment and Testing Guidelines
+
+- Build the application using `npm run build` before deployment to ensure all changes are compiled.
+- Alternatively, for development purposes, you can use `npm run dev` to automatically rebuild on changes. 
+
+- refer to [package.json](mdc:package.json)

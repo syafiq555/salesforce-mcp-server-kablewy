@@ -24,19 +24,19 @@ export const tools: ToolHandler[] = [
     inputSchema: {
       type: "object",
       properties: {
-        query: {
+        sql: {
           type: "string",
           description: "SOQL query to execute"
         }
       },
-      required: ["query"]
+      required: ["sql"]
     },
     handler: async (conn: Connection, args: QueryArgs) => {
-      return await conn.query(args.query);
+      return await conn.query(args?.sql ?? args?.query ?? 'Error: No query provided');
     }
   },
   {
-    name: "tooling-query",
+    name: "tooling_query",
     description: "Execute a query against the Salesforce Tooling API",
     inputSchema: {
       type: "object",
@@ -56,7 +56,7 @@ export const tools: ToolHandler[] = [
     }
   },
   {
-    name: "describe-object",
+    name: "describe_object",
     description: "Get detailed metadata about a Salesforce object",
     inputSchema: {
       type: "object",
@@ -93,7 +93,7 @@ export const tools: ToolHandler[] = [
     }
   },
   {
-    name: "metadata-retrieve",
+    name: "metadata_retrieve",
     description: "Retrieve metadata components from Salesforce",
     inputSchema: {
       type: "object",

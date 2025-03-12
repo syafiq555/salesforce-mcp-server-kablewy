@@ -8,6 +8,7 @@ import {
 import * as jsforce from 'jsforce';
 import dotenv from "dotenv";
 import { tools } from "./tools.js";
+import logger from './logger.js';
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ class SalesforceServer {
   constructor() {
     this.server = new Server({
       name: "salesforce-mcp-server",
-      version: "0.2.0"
+      version: "0.2.0",
     }, {
       capabilities: {
         tools: {}
@@ -44,11 +45,12 @@ class SalesforceServer {
 
   private setupErrorHandling(): void {
     this.server.onerror = (error) => {
-      console.error("[MCP Error]", error);
+      logger.error("[MCP Error]", error);
     };
 
     process.on('SIGINT', async () => {
       await this.server.close();
+      logger.info("Server closed gracefully");
       process.exit(0);
     });
   }
@@ -110,7 +112,30 @@ class SalesforceServer {
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("Salesforce MCP server running on stdio");
+    logger.info("Salesforce MCP server running on stdio");
+
+    // // Test the 'query' tool after connecting
+    // try {
+    //   // Login to Salesforce for the test
+    //   await this.conn.login(
+    //     process.env.SF_USERNAME!,
+    //     process.env.SF_PASSWORD! + process.env.SF_SECURITY_TOKEN!
+    //   );
+      
+    //   // Find the query tool
+    //   const queryTool = tools.find(t => t.name === "query");
+    //   if (queryTool) {
+    //     // Execute the tool handler directly
+    //     const testResult = await queryTool.handler(this.conn, { 
+    //       query: "SELECT Id, Name FROM Account LIMIT 1" 
+    //     });
+    //     logger.info("Tool test result: ", testResult);
+    //   } else {
+    //     logger.error("Query tool not found");
+    //   }
+    // } catch (error) {
+    //   logger.error("Tool test failed:", error);
+    // }
   }
 }
 

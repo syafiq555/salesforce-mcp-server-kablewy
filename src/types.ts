@@ -3,6 +3,7 @@ import type { MetadataType } from 'jsforce/api/metadata';
 // Existing query interface
 export interface QueryArgs {
   query: string;
+  sql: string;
 }
 
 export interface ToolingQueryArgs {
